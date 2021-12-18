@@ -23,9 +23,9 @@ function divide(a, b) {
 }
 
 function clearAll() {
-    let lhs = 0;
-    let rhs = 0;
-    let op = 0; //0 is clear, 1 is plus, 2 is minus, 3 is multiply, 4 is divide
+    lhs = 0;
+    rhs = 0;
+    op = 0; //0 is clear, 1 is plus, 2 is minus, 3 is multiply, 4 is divide
     clearDisplay();
 }
 
@@ -98,4 +98,4 @@ equals.addEventListener('click', function(){
     }
 })
 
-clear.addEventListener('click', clearDisplay);
+clear.addEventListener('click', clearAll);
