@@ -29,6 +29,12 @@ function clearAll() {
     clearDisplay();
 }
 
+function printStatus() {
+    console.log("LHS: " + lhs);
+    console.log("RHS: " + rhs);
+    console.log("OP: " + op);
+}
+
 function evaluate(lhs, rhs, operation) {
     if (operation == 1) {
         return add(lhs, rhs);
@@ -57,6 +63,7 @@ function opToInt(str) {
 let lhs = 0;
 let rhs = 0;
 let op = 0; //0 is clear, 1 is plus, 2 is minus, 3 is multiply, 4 is divide
+let clearOnNextPress = false;
 
 
 const output = document.querySelector('#output');
@@ -66,7 +73,15 @@ const backspace = document.querySelector('#delete');
 const opButtons = document.querySelectorAll('.opButton');
 const equals = document.querySelector('#equals');
 
-buttons.forEach(button => { button.addEventListener('click', function (e) { addToOutput(e.target.textContent); }) });
+buttons.forEach(button => {
+    button.addEventListener('click', function (e) {
+        if(clearOnNextPress){
+            clearDisplay();
+            clearOnNextPress = false;
+        }
+        addToOutput(e.target.textContent);
+    })
+});
 
 opButtons.forEach(opButton => {
     opButton.addEventListener('click', function (e) {
@@ -83,19 +98,26 @@ opButtons.forEach(opButton => {
             lhs = evaluate(lhs, rhs, op);
             op = opToInt(e.target.textContent);
             rhs = 0;
+            clearOnNextPress = true;
         }
+        printStatus();
     })
 });
 
-equals.addEventListener('click', function(){
+equals.addEventListener('click', function () {
 
-    if(op != 0){
+    if (op != 0) {
         rhs = parseInt(output.textContent, 10);
         output.textContent = evaluate(lhs, rhs, op);
         lhs = evaluate(lhs, rhs, op);
         op = 0;
         rhs = 0;
+        clearOnNextPress = true;
     }
 })
 
 clear.addEventListener('click', clearAll);
+
+backspace.addEventListener('click', function(){
+    output.textContent = output.textContent.substr(0, output.textContent.length-1);
+})
