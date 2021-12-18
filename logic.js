@@ -2,8 +2,13 @@ function addToOutput(str) {
     output.textContent += str;
 }
 
+function generatePrevious(){
+    return lhs + " " + opToString(op)+ " " + rhs + " = ";
+}
+
 function clearDisplay() {
     output.textContent = "";
+    previous.textContent = "";
 }
 
 function add(a, b) {
@@ -27,12 +32,6 @@ function clearAll() {
     rhs = 0;
     op = 0; //0 is clear, 1 is plus, 2 is minus, 3 is multiply, 4 is divide
     clearDisplay();
-}
-
-function printStatus() {
-    console.log("LHS: " + lhs);
-    console.log("RHS: " + rhs);
-    console.log("OP: " + op);
 }
 
 function evaluate(lhs, rhs, operation) {
@@ -60,8 +59,30 @@ function opToInt(str) {
     }
 }
 
-let lhs = 0;
-let rhs = 0;
+function opToString(num){
+    if (num == 1){
+        return "+";
+    } else if(num == 2){
+        return "-";
+    } else if(num == 3){
+        return "x";
+    } else if (num == 4){
+        return "÷";
+    }
+    else{
+        return "ERR";
+    }
+}
+
+function printStatus(){
+    console.log("LHS:" + lhs);
+    console.log("RHS:" + rhs);
+    console.log("OP:" + op);
+    console.log("result:" + evaluate(lhs, rhs, op));
+}
+
+let lhs = 0.0;
+let rhs = 0.0;
 let op = 0; //0 is clear, 1 is plus, 2 is minus, 3 is multiply, 4 is divide
 let clearOnNextPress = false;
 
@@ -72,6 +93,8 @@ const clear = document.querySelector('#clear');
 const backspace = document.querySelector('#delete');
 const opButtons = document.querySelectorAll('.opButton');
 const equals = document.querySelector('#equals');
+const controlButtons = document.querySelectorAll('.controlButton');
+const previous = document.querySelector('#previous');
 
 buttons.forEach(button => {
     button.addEventListener('click', function (e) {
@@ -91,28 +114,33 @@ opButtons.forEach(opButton => {
             clearDisplay();
         } else if (op != 0) {
             rhs = parseInt(output.textContent, 10);
-            console.log(lhs);
-            console.log(rhs);
-            console.log(op);
+            printStatus();
+            previous.textContent = generatePrevious();
             output.textContent = evaluate(lhs, rhs, op);
             lhs = evaluate(lhs, rhs, op);
             op = opToInt(e.target.textContent);
             rhs = 0;
             clearOnNextPress = true;
+            
+            
         }
-        printStatus();
     })
 });
 
 equals.addEventListener('click', function () {
-
     if (op != 0) {
         rhs = parseInt(output.textContent, 10);
+        printStatus();
+        previous.textContent = generatePrevious();
+        
         output.textContent = evaluate(lhs, rhs, op);
         lhs = evaluate(lhs, rhs, op);
+        console.log(lhs);
         op = 0;
         rhs = 0;
         clearOnNextPress = true;
+        
+        
     }
 })
 
@@ -121,3 +149,38 @@ clear.addEventListener('click', clearAll);
 backspace.addEventListener('click', function(){
     output.textContent = output.textContent.substr(0, output.textContent.length-1);
 })
+
+
+
+//visual logic stuff
+buttons.forEach(button => {button.addEventListener('mouseover', function(e){
+    e.target.style.backgroundColor = "#dcd6f7af";
+})});
+
+buttons.forEach(button => {button.addEventListener('mouseout', function(e){
+    e.target.style.backgroundColor = "#DCD6F7";
+})});
+
+opButtons.forEach(opButton => {opButton.addEventListener('mouseover', function(e){
+    e.target.style.backgroundColor = "#dcd6f7af";
+})});
+
+opButtons.forEach(opButton => {opButton.addEventListener('mouseout', function(e){
+    e.target.style.backgroundColor = "#DCD6F7";
+})});
+
+controlButtons.forEach(controlButton => {controlButton.addEventListener('mouseover', function(e){
+    e.target.style.backgroundColor = "#dcd6f7af";
+})});
+
+controlButtons.forEach(controlButton => {controlButton.addEventListener('mouseout', function(e){
+    e.target.style.backgroundColor = "#DCD6F7";
+})});
+
+equals.addEventListener('mouseover', function(e){
+    e.target.style.backgroundColor = "#dcd6f7af";
+});
+
+equals.addEventListener('mouseout', function(e){
+    e.target.style.backgroundColor = "#DCD6F7";
+});
